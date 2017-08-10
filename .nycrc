@@ -1,0 +1,17 @@
+{
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 0,
+    "include": [
+        "src/**/*.js"
+    ],
+    "exclude": [
+        "src/app.js"
+    ],
+    "reporter": [
+        "text",
+        "text-summary",
+        "html"
+    ],
+    "all": true
+}

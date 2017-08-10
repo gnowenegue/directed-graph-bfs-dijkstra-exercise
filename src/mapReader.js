@@ -19,7 +19,11 @@ const mapReader = {
         });
 
         if (options.mapName) {
-            self.loadMap(options.mapName);
+            try {
+                self.loadMap(options.mapName);
+            } catch (e) {
+                throw e;
+            }
         }
 
         return self;
@@ -31,7 +35,7 @@ const mapReader = {
         try {
             mapData = JSON.parse(fs.readFileSync(path.resolve(__dirname, map))).map;
         } catch (e) {
-            return new Error('Unable to load map.');
+            throw new Error('Unable to load map.');
         }
 
         const myNodes = nodes.create();
@@ -58,7 +62,7 @@ const mapReader = {
             const tempVertex = currentNode.getVertex(nodeNames[counter]);
 
             if (tempVertex === null) {
-                return new Error('NO SUCH ROUTE');
+                throw new Error('NO SUCH ROUTE');
             }
 
             distance += tempVertex.distance;
@@ -81,8 +85,9 @@ const mapReader = {
         while (queue.length > 0) {
             const tempNodeName = queue.shift();
 
-            if (tempNodeName === endNodeName) {
-                if ((!exact && depth <= maxStops - 1) || (exact && depth === maxStops)) {
+            if (tempNodeName === endNodeName && depth > 0) {
+
+                if ((!exact && depth - 1 <= maxStops) || (exact && depth === maxStops)) {
                     numberOfTrips += 1;
                 }
             }
@@ -140,7 +145,8 @@ const mapReader = {
             const tempNode = this.map.getNode(currentNodeName);
 
             for (let i = 0; i < tempNode.vertices.length; i++) {
-                const tempNeighbourNode = allNodes.find(n => n[0] === tempNode.vertices[i].end.name);
+                const tempNeighbourNode = allNodes.find(n => n[0]
+                    === tempNode.vertices[i].end.name);
 
                 if (tempNeighbourNode) {
                     const tempNeighbourNodeWeight = tempNeighbourNode[1];

@@ -21,8 +21,10 @@ const nodes = {
         mapData.forEach((data) => {
             const [tempStartNodeName, tempEndNodeName, tempNodeDistance] = data;
 
-            const tempStartNode = this.addNode(tempStartNodeName) || this.getNode(tempStartNodeName);
-            const tempEndNode = this.addNode(tempEndNodeName) || this.getNode(tempEndNodeName);
+            const tempStartNode = this.addNode(tempStartNodeName)
+                || this.getNode(tempStartNodeName);
+            const tempEndNode = this.addNode(tempEndNodeName)
+                || this.getNode(tempEndNodeName);
 
             tempStartNode.addVertex(vertex.create({
                 start: tempStartNode,

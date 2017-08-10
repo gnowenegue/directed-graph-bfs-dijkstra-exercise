@@ -4,9 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "npm test",
+    "test": "./node_modules/.bin/nyc _mocha test/bootstrap.test.js test/",
     "start": "node src/app.js",
-    "lint": "node_modules/.bin/eslint --fix src/**/*.js"
+    "lint": "./node_modules/.bin/eslint --fix src/**/*.js test/**/*.js",
+    "precommit": "npm run lint",
+    "prepush": "npm test"
   },
   "author": "Eugene Wong",
   "license": "ISC",
@@ -15,7 +17,10 @@
     "eslint": "^4.4.0",
     "eslint-config-airbnb-base": "^11.3.1",
     "eslint-plugin-import": "^2.7.0",
+    "husky": "^0.14.3",
     "mocha": "^3.5.0",
-    "sinon": "^3.0.0"
+    "nyc": "^11.1.0",
+    "sinon": "^3.0.0",
+    "sinon-chai": "^2.12.0"
   }
 }
