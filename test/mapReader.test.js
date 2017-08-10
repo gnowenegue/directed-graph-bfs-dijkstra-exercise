@@ -139,7 +139,7 @@ describe('##### MAP READER #####', () => {
             getNodeStub.withArgs('A').returns(myMapReader.map.nodes[0]);
             getNodeStub.withArgs('B').returns(myMapReader.map.nodes[1]);
 
-            expect(() => { myMapReader.calculateDistance('A', 'B') }).to.throw(Error, 'NO SUCH ROUTE');
+            expect(() => { myMapReader.calculateDistance('A', 'B'); }).to.throw(Error, 'NO SUCH ROUTE');
 
             getNodeStub.restore();
 

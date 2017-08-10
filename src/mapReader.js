@@ -33,7 +33,8 @@ const mapReader = {
         let mapData = {};
 
         try {
-            mapData = JSON.parse(fs.readFileSync(path.resolve(__dirname, map))).map;
+            const filePath = path.join(__dirname, '../', map);
+            mapData = JSON.parse(fs.readFileSync(path.resolve(filePath))).map;
         } catch (e) {
             throw new Error('Unable to load map.');
         }
@@ -86,7 +87,6 @@ const mapReader = {
             const tempNodeName = queue.shift();
 
             if (tempNodeName === endNodeName && depth > 0) {
-
                 if ((!exact && depth - 1 <= maxStops) || (exact && depth === maxStops)) {
                     numberOfTrips += 1;
                 }
