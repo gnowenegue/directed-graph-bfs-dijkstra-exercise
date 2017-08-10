@@ -3,12 +3,12 @@ const vertex = require('./vertex');
 
 const nodes = {
 
-    nodes: [],
+    defaultProperties: {
+        nodes: [],
+    },
 
     create(options = {}) {
-        const self = Object.create(this);
-
-        self.nodes = this.nodes;
+        const self = Object.assign(Object.create(this), this.defaultProperties);
 
         Object.keys(options).forEach((key) => {
             self[key] = options[key];
@@ -19,39 +19,37 @@ const nodes = {
 
     createNodes(mapData) {
         mapData.forEach((data) => {
-            const tempStartNodeName = data.split('')[0];
-            const tempEndNodeName = data.split('')[1];
-            const tempNodeDistance = data.split('')[2];
+            const [tempStartNodeName, tempEndNodeName, tempNodeDistance] = data;
 
-            if (!this.getNode(tempStartNodeName)) {
-                this.addNode(node.create({ name: tempStartNodeName }));
-            }
+            const tempStartNode = this.addNode(tempStartNodeName) || this.getNode(tempStartNodeName);
+            const tempEndNode = this.addNode(tempEndNodeName) || this.getNode(tempEndNodeName);
 
-            if (!this.getNode(tempEndNodeName)) {
-                this.addNode(node.create({ name: tempEndNodeName }));
-            }
-
-            const tempStartNode = this.getNode(tempStartNodeName);
-            const tempEndNode = this.getNode(tempEndNodeName);
-
-            const tempVertex = vertex.create({
+            tempStartNode.addVertex(vertex.create({
                 start: tempStartNode,
                 end: tempEndNode,
                 distance: parseInt(tempNodeDistance, 10),
-            });
-
-            tempStartNode.addVertex(tempVertex);
+            }));
         });
+
+        return this.nodes;
     },
 
     addNode(n) {
-        const tempNodes = this.nodes.slice(0);
-        tempNodes.push(n);
-        this.nodes = tempNodes;
+        if (!this.getNode(n)) {
+            const tempNode = node.create({ name: n });
+
+            const clone = this.nodes.slice(0);
+            clone.push(tempNode);
+            this.nodes = clone;
+
+            return tempNode;
+        }
+
+        return null;
     },
 
     getNode(name) {
-        return this.nodes.find(n => n.name === name);
+        return this.nodes.find(n => n.name === name) || null;
     },
 
 };

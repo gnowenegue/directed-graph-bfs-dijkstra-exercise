@@ -1,13 +1,12 @@
 const node = {
 
-    name: '',
-    vertices: [],
+    defaultProperties: {
+        name: '',
+        vertices: [],
+    },
 
     create(options = {}) {
-        const self = Object.create(this);
-
-        self.name = this.name;
-        self.vertices = this.vertices;
+        const self = Object.assign(Object.create(this), this.defaultProperties);
 
         Object.keys(options).forEach((key) => {
             self[key] = options[key];
@@ -17,13 +16,15 @@ const node = {
     },
 
     addVertex(v) {
-        const tempVertices = this.vertices.slice(0);
-        tempVertices.push(v);
-        this.vertices = tempVertices;
+        const clone = this.vertices.slice(0);
+        clone.push(v);
+        this.vertices = clone;
+
+        return v;
     },
 
     getVertex(name) {
-        return this.vertices.find(v => v.end.name === name);
+        return this.vertices.find(v => v.end.name === name) || null;
     },
 
 };
