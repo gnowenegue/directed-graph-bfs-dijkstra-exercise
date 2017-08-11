@@ -1,5 +1,5 @@
 {
-  "name": "thoughtworks-code-assignment",
+  "name": "directed-graph-bfs-dijkstra-exercise",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -11,7 +11,7 @@
     "prepush": "npm test"
   },
   "author": "Eugene Wong",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "chai": "^4.1.1",
     "eslint": "^4.4.0",
