@@ -47,7 +47,7 @@ describe('##### MAP READER #####', () => {
         });
 
         it('Pass in mapName, should loadMap()', (done) => {
-            const mapName = '../src/map.json';
+            const mapName = './map.json';
 
             const myNodes = nodesMock.expects('create');
             const tempMyNodes = {
@@ -116,7 +116,7 @@ describe('##### MAP READER #####', () => {
             return done();
         });
 
-        it('Calculate the distance of invalid route, should throw error', (done) => {
+        it('Calculate the distance of invalid route, should return error in String', (done) => {
             myMapReader = mapReader.create({
                 map: {
                     nodes: [
@@ -139,7 +139,9 @@ describe('##### MAP READER #####', () => {
             getNodeStub.withArgs('A').returns(myMapReader.map.nodes[0]);
             getNodeStub.withArgs('B').returns(myMapReader.map.nodes[1]);
 
-            expect(() => { myMapReader.calculateDistance('A', 'B'); }).to.throw(Error, 'NO SUCH ROUTE');
+            // eslint-disable-next-line max-len
+            // expect(() => { myMapReader.calculateDistance('A', 'B'); }).to.throw(Error, 'NO SUCH ROUTE'); 
+            expect(myMapReader.calculateDistance('A', 'B')).to.equal('NO SUCH ROUTE');
 
             getNodeStub.restore();
 
@@ -284,6 +286,9 @@ describe('##### MAP READER #####', () => {
 
             distance = myMapReader.calculateShortestRoute('A', 'C');
             expect(distance).to.equal(20);
+
+            distance = myMapReader.calculateShortestRoute('B', 'A');
+            expect(distance).to.equal('NO SUCH ROUTE');
 
             getNodeStub.restore();
 

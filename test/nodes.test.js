@@ -82,13 +82,13 @@ describe('##### NODES #####', () => {
 
             // work around for issue with chai
             expect(JSON.parse(JSON.stringify(myNodes.nodes[0]))).to.be.deep.equal(
-                JSON.parse(JSON.stringify(tempNode)),
+                JSON.parse(JSON.stringify(tempNode)) // eslint-disable-line comma-dangle
             );
             expect(JSON.parse(JSON.stringify(myNodes.nodes))).to.be.deep.include(
-                JSON.parse(JSON.stringify(tempNode)),
+                JSON.parse(JSON.stringify(tempNode)) // eslint-disable-line comma-dangle
             );
             expect(JSON.parse(JSON.stringify(testNode))).to.deep.equal(
-                JSON.parse(JSON.stringify(tempNode)),
+                JSON.parse(JSON.stringify(tempNode)) // eslint-disable-line comma-dangle
             );
 
             return done();

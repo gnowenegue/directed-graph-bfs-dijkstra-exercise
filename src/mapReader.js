@@ -63,7 +63,8 @@ const mapReader = {
             const tempVertex = currentNode.getVertex(nodeNames[counter]);
 
             if (tempVertex === null) {
-                throw new Error('NO SUCH ROUTE');
+                // throw new Error('NO SUCH ROUTE');
+                return 'NO SUCH ROUTE';
             }
 
             distance += tempVertex.distance;
@@ -159,7 +160,11 @@ const mapReader = {
             }
         }
 
-        return result;
+        /* if (result === null) {
+            throw new Error('NO SUCH ROUTE');
+        } */
+
+        return (result === Infinity) ? 'NO SUCH ROUTE' : result;
     },
 
     calculateTripsByDistance(startNodeName, endNodeName, distance) {
