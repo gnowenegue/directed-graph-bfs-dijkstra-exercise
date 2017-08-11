@@ -8,6 +8,7 @@ After cloning / downloading the project to your local directory, go into the pro
 
 # How to Run
 To run the project, simply run `npm start`.
+
 The main file of this project is `./app.js` on the root level. You can add other use cases there.
 
 ## Linting
@@ -71,14 +72,13 @@ It consists of the following properties:
 It doesn’t have any methods, except for the its constructor.
 
 ## Project Details
-This project is broken down into 4 main tasks.
+This project is broken down into 4 main tasks:
+- Calculate the distance of a particular route (i.e. A—B—C)
+- Calculate the number of trips from a node to the other, either allowing up to a maximum number of stops or exactly at a certain number of stops
+- Calculate the distance of the shortest route from a node to the other
+- Calculate the number of trips from a node to the other with a certain distance
 
-- Calculate the distance of a particular route (i.e. A—B—C).
-- Calculate the number of trips from a node to the other, either allowing up to a maximum number of stops or exactly at a certain number of stops.
-- Calculate the distance of the shortest route from a node to the other.
-- Calculate the number of trips from a node to the other with a certain distance.
-
-As such, there are 4 methods you can call:
+As such, there are 4 methods that can be called.
 
 ### calculateDistance(...nodeNames)
 
@@ -103,7 +103,7 @@ If `exact` is false, all the trips up to the depth `maxStops` will be included.
 
 If `exact` is true, only the trips at the depth `maxStops` will be considered.
 
-If no trips can be found, 0 will be returned.
+If no trips can be found based on the conditions, 0 will be returned.
 
 ### calculateShortestRoute(startNodeName, endNodeName)
 
@@ -132,9 +132,9 @@ If no trips can be found, 0 will be returned.
 - Node’s name is a single alphabet.
 - Node’s name is case sensitive.
 - Distance is a positive single-digit integer.
-- When calculating number of trips from 1 node to the other, exclude the first hit when starting Node’s name is same as ending Node’s name.
+- When calculating number of trips from 1 node to the other, if starting Node’s name is the same as ending Node’s name, only trips that has a stop other than itself is included.
 - When calculating distance of shortest route, if starting Node’s name is the same as ending Node’s name, the value must be bigger than 0.
-- When calculating number of trips within distance limit, exclude the first hit when starting Node’s name is same as ending Node’s name.
+- When calculating number of trips within distance limit, if starting Node’s name is the same as ending Node’s name, only trips that has a stop other than itself is included.
 - When calculating number of trips within distance limit, exclude the trips with distance equals the limit itself.
 - Map file structure:
 ```json
