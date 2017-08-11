@@ -3,6 +3,8 @@ const path = require('path');
 
 const nodes = require('./nodes');
 
+const NO_SUCH_ROUTE = 'NO SUCH ROUTE';
+
 const mapReader = {
 
     defaultProperties: {
@@ -63,6 +65,10 @@ const mapReader = {
      * if no route found, return 'NO SUCH ROUTE'
      */
     calculateDistance(...nodeNames) {
+        if (!this.map.validateNodes(...nodeNames)) {
+            return NO_SUCH_ROUTE;
+        }
+
         if (nodeNames.length < 2) {
             return 0;
         }
@@ -73,11 +79,15 @@ const mapReader = {
         let distance = 0;
         let counter = 1;
 
-        while (currentNode.name !== endNode.name) {
+        while (
+            currentNode.name !== endNode.name ||
+            distance === 0 ||
+            counter !== nodeNames.length
+        ) {
             const tempVertex = currentNode.getVertex(nodeNames[counter]);
 
             if (tempVertex === null) {
-                return 'NO SUCH ROUTE';
+                return NO_SUCH_ROUTE;
             }
 
             distance += tempVertex.distance;
@@ -97,6 +107,10 @@ const mapReader = {
      * if no trip found, return 0
      */
     calculateTrips(startNodeName, endNodeName, maxStops, exact = false) {
+        if (!this.map.validateNodes(startNodeName, endNodeName)) {
+            return 0;
+        }
+
         const queue = [startNodeName];
 
         let numberOfTrips = 0;
@@ -105,6 +119,11 @@ const mapReader = {
 
         while (queue.length > 0) {
             const tempNodeName = queue.shift();
+            const tempNode = this.map.getNode(tempNodeName);
+
+            if (tempNode === null) {
+                return 0;
+            }
 
             // exclude the first trip if starting Node's name is same as ending Node's name
             if (tempNodeName === endNodeName && depth > 0) {
@@ -116,7 +135,6 @@ const mapReader = {
                 }
             }
 
-            const tempNode = this.map.getNode(tempNodeName);
             countDown--;
 
             for (let i = 0; i < tempNode.vertices.length; i++) {
@@ -143,6 +161,10 @@ const mapReader = {
      * if no route found, return 'NO SUCH ROUTE'
      */
     calculateShortestRoute(startNodeName, endNodeName) {
+        if (!this.map.validateNodes(startNodeName, endNodeName)) {
+            return NO_SUCH_ROUTE;
+        }
+
         let allNodes = [];
         let result = null;
 
@@ -190,7 +212,7 @@ const mapReader = {
             }
         }
 
-        return (result === Infinity) ? 'NO SUCH ROUTE' : result;
+        return (result === Infinity) ? NO_SUCH_ROUTE : result;
     },
 
     /**
@@ -198,6 +220,10 @@ const mapReader = {
      * if no trips found, return 0
      */
     calculateTripsByDistance(startNodeName, endNodeName, distance) {
+        if (!this.map.validateNodes(startNodeName, endNodeName)) {
+            return 0;
+        }
+
         const queue = [[startNodeName, 0]];
         let numberOfTrips = 0;
 
@@ -207,6 +233,10 @@ const mapReader = {
             const currentNodeWeight = currentNode[1];
 
             const tempNode = this.map.getNode(currentNodeName);
+
+            if (tempNode === null) {
+                return 0;
+            }
 
             // exclude the first trip if starting Node's name is same as ending Node's name
             if (currentNodeName === endNodeName && currentNodeWeight > 0) {

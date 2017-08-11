@@ -72,6 +72,21 @@ const nodes = {
         return this.nodes.find(n => n.name === name) || null;
     },
 
+    /**
+     * check if the nodes exist
+     */
+    validateNodes(...names) {
+        let result = true;
+
+        names.forEach((n) => {
+            if (this.getNode(n) === null) {
+                result = false;
+            }
+        });
+
+        return result;
+    },
+
 };
 
 module.exports = nodes;

@@ -48,6 +48,7 @@ It consists of the following methods:
 - `createNodes()` — create the Node objects from the map data
 - `addNode()` — add Node object into the `nodes` array
 - `getNode()` — retrieve the Node object from the `nodes` array
+- `validateNodes()` — check if the Node objects exist in the `nodes` array
 
 ### Node
 This object represents different points on the map.
