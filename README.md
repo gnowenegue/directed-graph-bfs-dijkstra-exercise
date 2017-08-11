@@ -111,7 +111,9 @@ If no trips can be found, 0 will be returned.
 To calculate the distance of the shortest route from node A to B, run `calculateShortestRoute(‘A’, ‘B’)`.
 
 #### Design and thinking
-The main algorithm to execute this method is Dijkstra's algorithm.
+The main algorithm to execute this method is [Dijkstra’s algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Algorithm).
+
+This method only returns the distance of the shortest route. It can be further modified to return the route.
 
 If there is no possible route, “NO SUCH ROUTE” will be returned.
 
