@@ -11,6 +11,9 @@ const mapReader = {
         map: [],
     },
 
+    /**
+     * constructor
+     */
     create(options = {}) {
         const self = Object.assign(Object.create(this), this.defaultProperties);
 
@@ -29,6 +32,12 @@ const mapReader = {
         return self;
     },
 
+    /**
+     * load JSON file into map data
+     * create the network of Node and Vertex objects from the map data
+     * will throw error if unable to open file
+     * return map data
+     */
     loadMap(map) {
         let mapData = {};
 
@@ -48,6 +57,11 @@ const mapReader = {
         return mapData;
     },
 
+    /**
+     * calculate distance based on route
+     * sample route: 'A' to 'B' to 'C'
+     * if no route found, return 'NO SUCH ROUTE'
+     */
     calculateDistance(...nodeNames) {
         if (nodeNames.length < 2) {
             return 0;
@@ -63,7 +77,6 @@ const mapReader = {
             const tempVertex = currentNode.getVertex(nodeNames[counter]);
 
             if (tempVertex === null) {
-                // throw new Error('NO SUCH ROUTE');
                 return 'NO SUCH ROUTE';
             }
 
@@ -77,6 +90,12 @@ const mapReader = {
         return distance;
     },
 
+    /**
+     * calculate number of trips
+     * if exact, only consider trips at exactly `maxStops`
+     * else, consider all trips up to `maxStops`
+     * if no trip found, return 0
+     */
     calculateTrips(startNodeName, endNodeName, maxStops, exact = false) {
         const queue = [startNodeName];
 
@@ -87,14 +106,18 @@ const mapReader = {
         while (queue.length > 0) {
             const tempNodeName = queue.shift();
 
+            // exclude the first trip if starting Node's name is same as ending Node's name
             if (tempNodeName === endNodeName && depth > 0) {
+                // if exact, only consider when depth equals `maxStops`
+                // else, consider all trips all to depth `maxStops`
+                // - 1 because the depth has already + 1 when evaluating the Node
                 if ((!exact && depth - 1 <= maxStops) || (exact && depth === maxStops)) {
-                    numberOfTrips += 1;
+                    numberOfTrips++;
                 }
             }
 
             const tempNode = this.map.getNode(tempNodeName);
-            countDown -= 1;
+            countDown--;
 
             for (let i = 0; i < tempNode.vertices.length; i++) {
                 queue.push(tempNode.vertices[i].end.name);
@@ -102,8 +125,10 @@ const mapReader = {
 
             if (countDown === 0) {
                 countDown = queue.length;
-                depth += 1;
+                depth++;
 
+                // + 1 because we need to traverse another level
+                // in order for the queue to be able to evaluate the Node objects
                 if (depth === maxStops + 1) {
                     break;
                 }
@@ -113,6 +138,10 @@ const mapReader = {
         return numberOfTrips;
     },
 
+    /**
+     * calculate distance of shortest route
+     * if no route found, return 'NO SUCH ROUTE'
+     */
     calculateShortestRoute(startNodeName, endNodeName) {
         let allNodes = [];
         let result = null;
@@ -138,6 +167,7 @@ const mapReader = {
             const currentNodeName = currentNode[0];
             const currentNodeWeight = currentNode[1];
 
+            // exclude the first trip if starting Node's name is same as ending Node's name
             if (currentNodeName === endNodeName && currentNodeWeight > 0) {
                 result = currentNodeWeight;
                 break;
@@ -160,13 +190,13 @@ const mapReader = {
             }
         }
 
-        /* if (result === null) {
-            throw new Error('NO SUCH ROUTE');
-        } */
-
         return (result === Infinity) ? 'NO SUCH ROUTE' : result;
     },
 
+    /**
+     * calculate number of trips within distance limit
+     * if no trips found, return 0
+     */
     calculateTripsByDistance(startNodeName, endNodeName, distance) {
         const queue = [[startNodeName, 0]];
         let numberOfTrips = 0;
@@ -178,8 +208,9 @@ const mapReader = {
 
             const tempNode = this.map.getNode(currentNodeName);
 
+            // exclude the first trip if starting Node's name is same as ending Node's name
             if (currentNodeName === endNodeName && currentNodeWeight > 0) {
-                numberOfTrips += 1;
+                numberOfTrips++;
             }
 
             for (let i = 0; i < tempNode.vertices.length; i++) {

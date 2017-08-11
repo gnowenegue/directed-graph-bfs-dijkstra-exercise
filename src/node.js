@@ -5,6 +5,9 @@ const node = {
         vertices: [],
     },
 
+    /**
+     * constructor
+     */
     create(options = {}) {
         const self = Object.assign(Object.create(this), this.defaultProperties);
 
@@ -15,6 +18,10 @@ const node = {
         return self;
     },
 
+    /**
+     * adding Vertex object into the vertices array
+     * returning the Vertext object added
+     */
     addVertex(v) {
         const clone = this.vertices.slice(0);
         clone.push(v);
@@ -23,6 +30,10 @@ const node = {
         return v;
     },
 
+    /**
+     * getting the Vertex object by ending Node's name
+     * return null if no result found
+     */
     getVertex(name) {
         return this.vertices.find(v => v.end.name === name) || null;
     },

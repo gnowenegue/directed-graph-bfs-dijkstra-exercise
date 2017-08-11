@@ -6,6 +6,9 @@ const vertex = {
         distance: 0,
     },
 
+    /**
+     * constructor
+     */
     create(options = {}) {
         const self = Object.assign(Object.create(this), this.defaultProperties);
 

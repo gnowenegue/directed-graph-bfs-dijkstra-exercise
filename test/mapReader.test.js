@@ -139,8 +139,6 @@ describe('##### MAP READER #####', () => {
             getNodeStub.withArgs('A').returns(myMapReader.map.nodes[0]);
             getNodeStub.withArgs('B').returns(myMapReader.map.nodes[1]);
 
-            // eslint-disable-next-line max-len
-            // expect(() => { myMapReader.calculateDistance('A', 'B'); }).to.throw(Error, 'NO SUCH ROUTE'); 
             expect(myMapReader.calculateDistance('A', 'B')).to.equal('NO SUCH ROUTE');
 
             getNodeStub.restore();

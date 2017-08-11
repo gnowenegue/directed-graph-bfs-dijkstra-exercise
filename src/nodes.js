@@ -7,6 +7,9 @@ const nodes = {
         nodes: [],
     },
 
+    /**
+     * constructor
+     */
     create(options = {}) {
         const self = Object.assign(Object.create(this), this.defaultProperties);
 
@@ -17,6 +20,11 @@ const nodes = {
         return self;
     },
 
+    /**
+     * sample map data: ['AB1', 'BC2']
+     * create network of Node and Vertex objects from the map data
+     * return nodes array
+     */
     createNodes(mapData) {
         mapData.forEach((data) => {
             const [tempStartNodeName, tempEndNodeName, tempNodeDistance] = data;
@@ -36,6 +44,12 @@ const nodes = {
         return this.nodes;
     },
 
+    /**
+     * if the new Node does not exist in the nodes array
+     * add it into the nodes array
+     * returning the Node object added
+     * else return null
+     */
     addNode(n) {
         if (!this.getNode(n)) {
             const tempNode = node.create({ name: n });
@@ -50,6 +64,10 @@ const nodes = {
         return null;
     },
 
+    /**
+     * getting the Node object by Node's name
+     * return null if no result found
+     */
     getNode(name) {
         return this.nodes.find(n => n.name === name) || null;
     },
