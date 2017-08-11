@@ -3,6 +3,16 @@
 
 const node = require('../src/node');
 
+const mockVertex = {
+    start: {
+        name: 'start',
+    },
+    end: {
+        name: 'end',
+    },
+    distance: 99,
+};
+
 describe('##### NODE #####', () => {
     let myNode;
 
@@ -31,23 +41,19 @@ describe('##### NODE #####', () => {
         });
     });
 
+    beforeEach(() => {
+        myNode = node.create();
+    });
+
     describe('addVertex()', () => {
         it('Add vertex, should reflect', (done) => {
-            myNode = node.create();
-
             expect(myNode.vertices).to.be.empty;
 
-            const tempVertex = {
-                start: 'start',
-                end: 'end',
-                distance: 99,
-            };
-
-            myNode.addVertex(tempVertex);
+            myNode.addVertex(mockVertex);
 
             expect(myNode.vertices).to.not.be.empty;
-            expect(myNode.vertices[0]).to.be.deep.equal(tempVertex);
-            expect(myNode.vertices).to.be.deep.include(tempVertex);
+            expect(myNode.vertices[0]).to.be.deep.equal(mockVertex);
+            expect(myNode.vertices).to.be.deep.include(mockVertex);
 
             return done();
         });
@@ -55,31 +61,17 @@ describe('##### NODE #####', () => {
 
     describe('getVertex()', () => {
         it('Get vertex, should reflect', (done) => {
-            const tempVertex = {
-                start: {
-                    name: 'start',
-                },
-                end: {
-                    name: 'end',
-                },
-                distance: 99,
-            };
-
-            myNode = node.create({
-                vertices: [tempVertex],
-            });
+            myNode.vertices = [mockVertex];
 
             const resultVertex = myNode.getVertex('end');
 
             expect(resultVertex).to.exist;
-            expect(resultVertex).to.be.deep.equal(tempVertex);
+            expect(resultVertex).to.be.deep.equal(mockVertex);
 
             return done();
         });
 
         it('Get invalid vertex, should return null', (done) => {
-            myNode = node.create();
-
             const resultVertex = myNode.getVertex('end');
 
             expect(resultVertex).to.be.null;

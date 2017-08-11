@@ -31,6 +31,7 @@ const nodes = {
 
             const tempStartNode = this.addNode(tempStartNodeName)
                 || this.getNode(tempStartNodeName);
+
             const tempEndNode = this.addNode(tempEndNodeName)
                 || this.getNode(tempEndNodeName);
 
@@ -53,7 +54,6 @@ const nodes = {
     addNode(n) {
         if (!this.getNode(n)) {
             const tempNode = node.create({ name: n });
-
             const clone = this.nodes.slice(0);
             clone.push(tempNode);
             this.nodes = clone;

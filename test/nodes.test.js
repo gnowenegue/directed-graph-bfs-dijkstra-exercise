@@ -5,6 +5,11 @@ const nodes = require('../src/nodes');
 const node = require('../src/node');
 const vertex = require('../src/vertex');
 
+const mockNode = {
+    name: 'name',
+    vertices: [],
+};
+
 describe('##### NODES #####', () => {
     let myNodes;
 
@@ -32,86 +37,143 @@ describe('##### NODES #####', () => {
         });
     });
 
-    describe('createNodes()', () => {
-        let nodeMock;
-        let vertexMock;
+    beforeEach(() => {
+        myNodes = nodes.create();
+    });
 
-        before(() => {
-            nodeMock = sinon.mock(node);
-            vertexMock = sinon.mock(vertex);
+    describe('createNodes()', () => {
+        beforeEach(() => {
+            sinon.stub(myNodes, 'addNode');
+            sinon.stub(myNodes, 'getNode');
+
+            sinon.stub(vertex, 'create');
         });
 
         it('Create nodes from map data, should reflect', (done) => {
             const mapData = ['AB5', 'BC4', 'CD8', 'DC8'];
 
-            myNodes = nodes.create();
+            ['A', 'B', 'C', 'D'].forEach((a) => {
+                myNodes.addNode.withArgs(a)
+                    .onFirstCall()
+                    .returns({
+                        addVertex() {},
+                    })
+                    .onSecondCall()
+                    .returns(null);
 
-            nodeMock.expects('addVertex').exactly(4);
-            vertexMock.expects('create').exactly(4);
+                myNodes.getNode.withArgs(a)
+                    .returns({
+                        addVertex() {},
+                    });
+            });
 
             myNodes.createNodes(mapData);
 
-            nodeMock.verify();
-            vertexMock.verify();
-
-            expect(myNodes.nodes).to.exist.and.have.lengthOf(4);
+            expect(myNodes.addNode).to.have.callCount(8);
+            expect(myNodes.getNode).to.have.callCount(4);
 
             return done();
         });
 
-        after(() => {
-            nodeMock.restore();
-            vertexMock.restore();
+        afterEach(() => {
+            myNodes.addNode.restore();
+            myNodes.getNode.restore();
+
+            vertex.create.restore();
         });
     });
 
     describe('addNode()', () => {
-        it('Add node, should reflect', (done) => {
-            myNodes = nodes.create();
+        beforeEach(() => {
+            sinon.stub(myNodes, 'getNode');
 
+            sinon.stub(node, 'create');
+        });
+
+        it('Add node, should reflect', (done) => {
             expect(myNodes.nodes).to.be.empty;
 
-            const tempNode = {
-                name: 'name',
-                vertices: [],
-            };
+            myNodes.getNode.returns(null);
+            node.create.returns(mockNode);
 
             const testNode = myNodes.addNode('name');
 
             expect(myNodes.nodes).to.not.be.empty;
-
-            // work around for issue with chai
-            expect(JSON.parse(JSON.stringify(myNodes.nodes[0]))).to.be.deep.equal(
-                JSON.parse(JSON.stringify(tempNode)) // eslint-disable-line comma-dangle
-            );
-            expect(JSON.parse(JSON.stringify(myNodes.nodes))).to.be.deep.include(
-                JSON.parse(JSON.stringify(tempNode)) // eslint-disable-line comma-dangle
-            );
-            expect(JSON.parse(JSON.stringify(testNode))).to.deep.equal(
-                JSON.parse(JSON.stringify(tempNode)) // eslint-disable-line comma-dangle
-            );
+            expect(myNodes.nodes[0]).to.be.deep.equal(mockNode);
+            expect(myNodes.nodes).to.be.deep.include(mockNode);
+            expect(testNode).to.be.deep.equal(mockNode);
 
             return done();
         });
 
         it('Add existing node, should return null', (done) => {
             myNodes = nodes.create({
-                nodes: [
-                    {
-                        name: 'name',
-                        vertices: [],
-                    },
-                ],
+                nodes: [mockNode],
             });
+
+            sinon.stub(myNodes, 'getNode');
 
             expect(myNodes.nodes).to.not.be.empty;
             expect(myNodes.nodes).to.have.lengthOf(1);
+
+            myNodes.getNode.returns(mockNode);
 
             const testNode = myNodes.addNode('name');
 
             expect(myNodes.nodes).to.not.be.empty;
             expect(myNodes.nodes).to.have.lengthOf(1);
             expect(testNode).to.be.null;
+
+            return done();
+        });
+
+        afterEach(() => {
+            myNodes.getNode.restore();
+
+            node.create.restore();
+        });
+    });
+
+    describe('getNode()', () => {
+        it('Get node, should reflect', (done) => {
+            myNodes = nodes.create({
+                nodes: [mockNode],
+            });
+
+            const testNode = myNodes.getNode('name');
+
+            expect(testNode).to.exist;
+            expect(testNode).to.be.deep.equal(mockNode);
+
+            return done();
+        });
+
+        it('Get invalid node, should return null', (done) => {
+            const testNode = myNodes.getNode('Z');
+
+            expect(testNode).to.be.null;
+
+            return done();
+        });
+    });
+
+    describe('validateNodes()', () => {
+        it('Validate nodes, should return true', (done) => {
+            myNodes = nodes.create({
+                nodes: [mockNode],
+            });
+
+            const testResult = myNodes.validateNodes('name');
+
+            expect(testResult).to.be.true;
+
+            return done();
+        });
+
+        it('Validate invalid nodes, should return false', (done) => {
+            const testResult = myNodes.validateNodes('Z');
+
+            expect(testResult).to.be.false;
 
             return done();
         });
