@@ -135,7 +135,7 @@ If no trips can be found, 0 will be returned.
 - When calculating number of trips within distance limit, exclude the first hit when starting Node’s name is same as ending Node’s name.
 - When calculating number of trips within distance limit, exclude the trips with distance equals the limit itself.
 - Map file structure:
-```
+```json
 {
     "map": ["AB5", "BC4", "CD8", "DC8", "DE6", "AD5", "CE2", "EB3", "AE7"]
 }
