@@ -69,7 +69,7 @@ const nodes = {
      * return null if no result found
      */
     getNode(name) {
-        return this.nodes.find(n => n.name === name) || null;
+        return this.nodes.find((n) => n.name === name) || null;
     },
 
     /**

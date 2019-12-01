@@ -35,7 +35,7 @@ const node = {
      * return null if no result found
      */
     getVertex(name) {
-        return this.vertices.find(v => v.end.name === name) || null;
+        return this.vertices.find((v) => v.end.name === name) || null;
     },
 
 };

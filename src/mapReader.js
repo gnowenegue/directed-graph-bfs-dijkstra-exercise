@@ -24,11 +24,13 @@ const mapReader = {
         });
 
         if (options.mapName) {
+            /* eslint-disable no-useless-catch */
             try {
                 self.loadMap(options.mapName);
             } catch (e) {
                 throw e;
             }
+            /* eslint-enable no-useless-catch */
         }
 
         return self;
@@ -80,9 +82,9 @@ const mapReader = {
         let counter = 1;
 
         while (
-            currentNode.name !== endNode.name ||
-            distance === 0 ||
-            counter !== nodeNames.length
+            currentNode.name !== endNode.name
+            || distance === 0
+            || counter !== nodeNames.length
         ) {
             const tempVertex = currentNode.getVertex(nodeNames[counter]);
 
@@ -198,7 +200,7 @@ const mapReader = {
             const tempNode = this.map.getNode(currentNodeName);
 
             for (let i = 0; i < tempNode.vertices.length; i++) {
-                const tempNeighbourNode = allNodes.find(n => n[0]
+                const tempNeighbourNode = allNodes.find((n) => n[0]
                     === tempNode.vertices[i].end.name);
 
                 if (tempNeighbourNode) {
